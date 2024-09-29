@@ -1,0 +1,79 @@
+import java.util.Scanner;
+
+public class FrogsBetweenStones {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Read the string input
+        String s = scanner.nextLine();
+
+        // Read the size of the startIndex array
+        int n = scanner.nextInt();
+        int[] startIndex = new int[n];
+
+        // Read startIndex values
+        for (int i = 0; i < n; i++) {
+            startIndex[i] = scanner.nextInt();
+        }
+
+        // Read the size of the endIndex array
+        int m = scanner.nextInt();
+        int[] endIndex = new int[m];
+
+        // Read endIndex values
+        for (int i = 0; i < m; i++) {
+            endIndex[i] = scanner.nextInt();
+        }
+
+        // Call the method to calculate the number of frogs between stones
+        int[] result = countFrogsBetweenStones(s, startIndex, endIndex);
+
+        // Print the results
+        for (int res : result) {
+            System.out.println(res);
+        }
+
+        scanner.close();
+    }
+
+    public static int[] countFrogsBetweenStones(String s, int[] startIndex, int[] endIndex) {
+        int n = startIndex.length;
+        int[] result = new int[n];
+
+        // Prefix array to store the number of '*' up to each position
+        int[] prefixFrogs = new int[s.length()];
+        int frogCount = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '*') {
+                frogCount++;
+            }
+            prefixFrogs[i] = frogCount;
+        }
+
+        // Process each query
+        for (int i = 0; i < n; i++) {
+            int start = startIndex[i] - 1;
+            int end = endIndex[i] - 1;
+
+            // Find the first stone ('|') from the left starting from the start index
+            while (start <= end && s.charAt(start) != '|') {
+                start++;
+            }
+
+            // Find the first stone ('|') from the right starting from the end index
+            while (end >= start && s.charAt(end) != '|') {
+                end--;
+            }
+
+            // If there are valid stones, count the frogs between them
+            if (start < end) {
+                result[i] = prefixFrogs[end] - prefixFrogs[start];
+            } else {
+                result[i] = 0;
+            }
+        }
+
+        return result;
+    }
+}
